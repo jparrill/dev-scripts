@@ -78,15 +78,15 @@ if ! sudo -n uptime &> /dev/null ; then
 fi
 
 # Check OS
-if [[ ! $(awk -F= '/^ID=/ { print $2 }' /etc/os-release | tr -d '"') =~ ^(centos|rhel)$ ]]; then
+if [[ ! $(awk -F= '/^ID=/ { print $2 }' /etc/os-release | tr -d '"') =~ ^(fedora|centos|rhel)$ ]]; then
   echo "Unsupported OS"
   exit 1
 fi
 
 # Check CentOS version
 VER=$(awk -F= '/^VERSION_ID=/ { print $2 }' /etc/os-release | tr -d '"' | cut -f1 -d'.')
-if [[ ${VER} -ne 7 ]] && [[ ${VER} -ne 8 ]]; then
-  echo "Required CentOS 7 / RHEL 7 / RHEL 8"
+if [[ ${VER} -ne 7 ]] && [[ ${VER} -ne 8 ]] && [[ ${VER} -ne 30 ]]; then
+  echo "Required CentOS 7 / RHEL 7 / RHEL 8 / FEDORA 30"
   exit 1
 fi
 

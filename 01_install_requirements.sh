@@ -28,6 +28,9 @@ if [ ! -f /etc/yum.repos.d/epel.repo ] ; then
         :
     elif grep -q "Red Hat Enterprise Linux" /etc/redhat-release ; then
         sudo yum -y install http://mirror.centos.org/centos/7/extras/x86_64/Packages/epel-release-7-11.noarch.rpm
+    elif grep -q "Fedora" /etc/redhat-release; then
+        echo "Fedora"
+        FEDORA="True"
     else
         sudo yum -y install epel-release --enablerepo=extras
     fi
@@ -51,6 +54,31 @@ if [ "${RHEL8}" = "True" ] ; then
     git pull -r
     sudo pip3 install .
     popd ; popd
+elif [ "${FEDORA}" = "True" ]; then
+    sudo dnf -y install \
+        python3-pip \
+        crudini \
+        python3-setuptools \
+        python3-requests \
+        python3-devel \
+        python3-lxc \
+        python3-netaddr \
+        redhat-rpm-config \
+        lxc-devel \
+        python3-lxml \
+        ansible \
+        redhat-lsb-core \
+        bind-utils \
+        jq \
+        libvirt \
+        libvirt-devel \
+        libvirt-daemon-kvm \
+        podman \
+        qemu-kvm \
+        virt-install \
+        unzip \
+        network-scripts \
+        ipmitool
 else
     sudo yum -y install \
         crudini \
@@ -176,10 +204,4 @@ if [ ! -f ${oc_tools_dir}/${oc_tools_local_file} ] || [ $oc_date -lt 1559308936 
   wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/${oc_version}/linux/oc.tar.gz -O ${oc_tools_local_file}
   tar xvzf ${oc_tools_local_file}
   sudo cp oc /usr/local/bin/
-fi
-
-# Install operator-sdk
-if ! which operator-sdk 2>&1 >/dev/null ; then
-    sudo wget https://github.com/operator-framework/operator-sdk/releases/download/v0.9.0/operator-sdk-v0.9.0-x86_64-linux-gnu -O /usr/local/bin/operator-sdk
-    sudo chmod 755 /usr/local/bin/operator-sdk
 fi
